@@ -16,15 +16,12 @@ int main() {
 	enum states state = (enum states) 0;
 
 	do {
-
 		printf("Input:\n");
 		scanf("%s", in);
 		for (i = 1; in[i] != '\0'; ++i);
 		input = malloc(i+1);
 		input = in;
 		ret = sintax(input, &state);
-		//step(i, in, ret);
-
 	} while (strcmp(input,"q"));
 
 	return 0;
