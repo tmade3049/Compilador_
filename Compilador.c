@@ -21,17 +21,17 @@ struct branch the_table[5][5] = {
 };
 
 // char* simbol = (char*)malloc(sizeof(char));
-char sim[] = { "123456789+-*/()" };
+char sim[] = { "0123456789+-*/()" };
 
 char* step(enum states *state, char* input, int input_type)
 {
 	char* status = NULL;
-	char* temp = NULL;
+	char temp[500] = { 0 };
 	struct branch *b = &the_table[*state][input_type];
 	*state = (enum states)(b->new_state);
 	if (b->set_error)
 	{
-		sprintf(temp," -> Erro de Sintaxe: %c posicao invalida\n", input);
+		sprintf(temp," -> Erro de Sintaxe: %c posicao invalida\n", input[0]);
 	}
 	else {
 
@@ -51,9 +51,9 @@ char* step(enum states *state, char* input, int input_type)
 		}
 
 	}
-	return status;
+	return NULL;
 }
-int sintax(char* in, int* pos) {
+int sintax(char* in, enum states *state) {
 	int ret = 0;
 	int i, j, k = 0;
 	int isOperador = FALSE;
@@ -63,25 +63,36 @@ int sintax(char* in, int* pos) {
 	int s_simb = strlen(sim);
 
 	char c;
-	char *temp = (char*)malloc(1);
+	char temp[32] = {NULL};
 
 	for (i = 0; i < s_in; i++) {
-		for (j = 0; j < 13; j++) {
+		for (j = 0; j < 15; j++) {
 			char a = in[i];
 			char b = sim[j];
-			//Localiza simbolo
+			if (!j) state = 1;
+			// Localiza simbolo
 			if (in[i] == sim[j]) {
 				isValid = TRUE;
-				//se simbolo � operador
-				if (j > 8) {
-					if (k) {
-						temp = (char*)realloc(temp, k + 1);
-						*(temp + k + 1) = '\0';
+				// Simbolo eh number 
+				if (j < 10) {
+					isOperador = FALSE;
+					temp[k] = *(in + i);
+					k++;
+					if (i == (s_in - 1)) {
+						temp[k + 1] = '\0';
+						step(&state, &temp, number);
 						printf(" Simbolo %s valido sucess\n", temp);
-						k = 0;
-						temp = (char *)malloc(1);
 					}
-					//Primeiro e ultimo nao pode ser operador
+				}
+				// Simbolo eh operador
+				else if (j < 14) {
+					if (k) {
+						temp [k + 1] = '\0';
+						step(&state, &in[i], number);
+						printf(" Simbolo %s valido sucess\n", temp);
+						k = 0;						
+					}
+					// Primeiro e ultimo nao pode ser operador
 					if (i == 0) {
 						printf(" begin operador %c error\n", in[i]);
 					}
@@ -89,23 +100,25 @@ int sintax(char* in, int* pos) {
 						printf(" end operador %c error\n", in[i]);
 					}
 					else {
-						//Dois operadores seguidos
+						// Dois operadores seguidos
 						if (isOperador) {
 							printf(" 2x operador error\n");
 						}
 						else {
 							isOperador = TRUE;
+							step(&state, &in[i], operator);
 							printf(" Operador %c valido sucess\n", in[i]);
 						}
 					}
 				}
 				else {
-					isOperador = FALSE;
-					*(temp + k) = *(in + i);
-					k++;
-					if (i == (s_in - 1)) {
-						*(temp + k + 1) = '\0';
-						printf(" Simbolo %s valido sucess\n", temp);
+					// simbolo eh open
+					if (k == 14) {
+						step(state, in, open);
+					}
+					// simbolo eh close
+					else {
+						step(state, in, close);
 					}
 				}
 				break;
@@ -118,4 +131,5 @@ int sintax(char* in, int* pos) {
 		isValid = FALSE;
 	}
 	return ret;
+	step(state, in, finish);
 }

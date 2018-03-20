@@ -13,6 +13,7 @@ int main() {
 	char in[256] = { 0 };
 	int ret = 0, pos;
 	int i;
+	enum states state = (enum states) 0;
 
 	do {
 
@@ -21,8 +22,8 @@ int main() {
 		for (i = 1; in[i] != '\0'; ++i);
 		input = malloc(i+1);
 		input = in;
-		ret = sintax(input, &pos);
-		step(i, in, ret);
+		ret = sintax(input, &state);
+		//step(i, in, ret);
 
 	} while (strcmp(input,"q"));
 
