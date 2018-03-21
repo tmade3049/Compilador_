@@ -21,9 +21,21 @@
     <ClCompile Include="Compilador.c">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="stack.c">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="polonesa.c">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compilador.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="polonesa.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,6 +5,7 @@
 *      Author: tai
 */
 #include"Compilador.h"
+#include<stdio.h>
 
 int main() {
 
